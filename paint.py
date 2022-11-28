@@ -1,11 +1,24 @@
-from turtle import color
 import numpy as np
 import cv2
 from collections import deque
 
 # Detects red color
-lower_red = np.array([161, 155, 84])
-upper_red = np.array([179, 255, 255])
+# See below for creating modifiable values
+#lower_red = np.array([161, 155, 84])
+#upper_red = np.array([179, 255, 255])
+
+# Empty function to make createTrackbar valid
+def empty(x):
+    pass
+
+# Create a window to set the values
+cv2.namedWindow("Tracker Color")
+cv2.createTrackbar("Lower Hue", "Tracker Color", 0, 255, empty)
+cv2.createTrackbar("Lower Sat.", "Tracker Color", 0, 255, empty)
+cv2.createTrackbar("Lower Value", "Tracker Color", 0, 255, empty)
+cv2.createTrackbar("Upper Hue", "Tracker Color", 255, 255, empty)
+cv2.createTrackbar("Upper Sat.", "Tracker Color", 255, 255, empty)
+cv2.createTrackbar("Upper Value", "Tracker Color", 255, 255, empty)
 
 bpoints = [deque(maxlen=1024)]
 gpoints = [deque(maxlen=1024)]
@@ -17,7 +30,7 @@ colors = [(255,0,0), (0,255,0), (0,0,255), (0,255,255)]
 
 color_index = 0
 
-# Create a window
+# Create the window to paint on
 paintWindow = np.zeros((471, 636, 3)) + 255
 paintWindow = cv2.rectangle(paintWindow, (40,1), (140,65), (0,0,0), 2)
 paintWindow = cv2.rectangle(paintWindow, (160,1), (255,65), colors[0], -1)
@@ -25,6 +38,8 @@ paintWindow = cv2.rectangle(paintWindow, (275,1), (370,65), colors[1], -1)
 paintWindow = cv2.rectangle(paintWindow, (390,1), (485,65), colors[2], -1)
 paintWindow = cv2.rectangle(paintWindow, (505,1), (600,65), colors[3], -1)
 
+# These have set values on the paintWindow screen
+# This is so it's easy to determine whether the tracker is in that certain area
 cv2.putText(paintWindow, "CLEAR ALL", (49, 33),
     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,0), 2,
     cv2.LINE_AA)
@@ -53,6 +68,16 @@ while True:
     if not grabbed:
         break
 
+    l_h = cv2.getTrackbarPos("Lower Hue", "Tracker Color")
+    l_s = cv2.getTrackbarPos("Lower Sat.", "Tracker Color")
+    l_v = cv2.getTrackbarPos("Lower Value", "Tracker Color")
+    u_h = cv2.getTrackbarPos("Upper Hue", "Tracker Color")
+    u_s = cv2.getTrackbarPos("Upper Sat.", "Tracker Color")
+    u_v = cv2.getTrackbarPos("Upper Value", "Tracker Color")
+
+    lower_colors = np.array([l_h,l_s,l_v])
+    upper_colors = np.array([u_h,u_s,u_v])
+
     frame = cv2.rectangle(frame, (40,1), (140,65), (122,122,122), -1)
     frame = cv2.rectangle(frame, (160,1), (255,65), colors[0], -1)
     frame = cv2.rectangle(frame, (275,1), (370,65), colors[1], -1)
@@ -66,7 +91,7 @@ while True:
 
     # Preprocess input
     kernel = np.ones((5,5), np.uint8)
-    Mask = cv2.inRange(hsv, lower_red, upper_red)
+    Mask = cv2.inRange(hsv, lower_colors, upper_colors)
     Mask = cv2.erode(Mask, kernel, iterations=2)
     Mask = cv2.morphologyEx(Mask, cv2.MORPH_OPEN, kernel)
     Mask = cv2.dilate(Mask, kernel, iterations=1)
