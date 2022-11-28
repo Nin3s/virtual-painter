@@ -41,3 +41,13 @@ cv2.putText(paintWindow, "YELLOW", (520, 33),
     cv2.LINE_AA)
 
 cv2.namedWindow('Paint', cv2.WINDOW_AUTOSIZE)
+
+# Capturing video
+camera = cv2.VideoCapture(cv2.CAP_V4L2)
+
+while True:
+    (grabbed, frame) = camera.read()
+    frame = cv2.flip(frame, 1)
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    if not grabbed:
+        break
