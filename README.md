@@ -12,7 +12,7 @@ I created this application following a tutorial which is linked [here.](https://
 Note: I had difficulty getting OpenCV to run in WSL, but it worked fine for me once I switched to Windows. In WSL, the window pops up but immediately closes down. It might've been a file path issue for the camera, but I wasn't too sure.
 
 ## RGB vs BGR vs HSV (Because it confused me too) And Setting Tracker Color
-HSV stands for Hue, Saturation, and Value. In the tracker modifier, there's an upper value and a lower value to set it. By default, lower is set to 0 and upper to 255. It might take some time to get the color of your tracker right, but it should work afterwords. Make sure you don't have any similar colors in your background or the paint may jump around. [Here's a nifty document about colorspaces in OpenCV](https://docs.opencv.org/3.2.0/df/d9d/tutorial_py_colorspaces.html)
+HSV stands for Hue, Saturation, and Value. In the tracker modifier, there's an upper value and a lower value to set it. By default, lower is set to 0 and upper to 255. It might take some time to get the color of your tracker right, but it should work afterwords. Make sure you don't have any similar colors in your background or the paint may jump around. Keep in mind the lighting of the room as well. [Here's a nifty document about colorspaces in OpenCV](https://docs.opencv.org/3.2.0/df/d9d/tutorial_py_colorspaces.html)
 
 ![image](https://user-images.githubusercontent.com/50024330/204200760-624c8d0e-187d-4f33-a760-627c642bcec1.png)
 
